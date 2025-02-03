@@ -1,5 +1,4 @@
 <?php
-
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PenerimaanBarangController;
 use App\Http\Controllers\BarangInventarisController;
@@ -7,19 +6,11 @@ use App\Http\Controllers\LaporanBarang;
 use App\Http\Controllers\SuperUserController;
 use App\Http\Controllers\PeminjamanBarangController;
 use App\Http\Controllers\PengembalianController;
-use Illuminate\Support\Facades\Auth;
 
 // Halaman utama
 Route::get('/', function () {
-    return view('layout.admin');
-});
-
-Route::get('/', function() {
     return view('login');
 })->name('login');
-
-// Auth Routes (Login, Register, etc.)
-// Auth::routes();
 
 // Route untuk Super User (su) dan dashboard
 Route::prefix('su')->name('super_user.')->group(function () {
@@ -52,6 +43,13 @@ Route::prefix('su')->name('super_user.')->group(function () {
 
     // Daftar barang yang belum dikembalikan
     Route::get('peminjaman-barang/barang-belum-kembali', [PeminjamanBarangController::class, 'barangBelumKembali'])->name('peminjaman.barangBelumKembali');
+
+    // Route untuk laporan dalam prefix 'su'
+    Route::prefix('laporan')->name('laporan.')->group(function () {
+        Route::get('/barang', [LaporanBarang::class, 'index'])->name('barang');
+        Route::get('/pengembalian', [LaporanBarang::class, 'pengembalian'])->name('pengembalian');
+        Route::get('/status', [LaporanBarang::class, 'status'])->name('status');
+    });
 });
 
 // Route untuk penerimaan barang (tanpa prefix 'su')
@@ -59,24 +57,14 @@ Route::get('penerimaan', [PenerimaanBarangController::class, 'penerimaan'])->nam
 Route::post('penerimaan', [PenerimaanBarangController::class, 'store'])->name('penerimaan.store');
 
 // Route untuk Super User dengan middleware auth
-Route::prefix('super_user')
-    ->name('super_user.')
-    // ->middleware('auth')
-    ->group(function () {
+Route::prefix('super_user')->name('super_user.')->group(function () {
     // Menampilkan form pengembalian barang
     Route::get('/peminjaman/return-form', [PeminjamanBarangController::class, 'returnForm'])->name('peminjaman.returnForm');
-    
+
     // Route untuk Barang Inventaris
     Route::get('baranginventaris/form', [BarangInventarisController::class, 'showForm'])->name('baranginventaris.form');
     Route::post('baranginventaris/store', [BarangInventarisController::class, 'store'])->name('baranginventaris.store');
     Route::delete('baranginventaris/{br_kode}', [BarangInventarisController::class, 'destroy'])->name('baranginventaris.destroy');
-});
-
-// Route untuk laporan
-Route::prefix('laporan')->name('laporan.')->group(function () {
-    Route::get('/barang', [LaporanBarang::class, 'index'])->name('barang');
-    Route::get('/pengembalian', [LaporanBarang::class, 'pengembalian'])->name('pengembalian');
-    Route::get('/status', [LaporanBarang::class, 'status'])->name('status');
 });
 
 // Route untuk menghapus barang inventaris

@@ -10,14 +10,14 @@ class BarangInventaris extends Model
     use HasFactory;
 
     protected $table = 'tm_barang_inventaris';
-    protected $primaryKey = 'br_kode'; // Adjust if necessary
-    protected $fillable = ['br_kode', 'br_nama', 'jns_brg_kode', 'user_id', 'br_nama', 'br_tgl_terima', 'br_tgl_entry', 'br_status'];
+    protected $primaryKey = 'br_kode'; 
+    protected $fillable = ['br_kode', 'br_nama', 'jns_brg_kode', 'user_id', 'br_tgl_terima', 'br_tgl_entry', 'br_status'];
+    public $incrementing = false; // Karena primary key bukan auto-increment
+    protected $keyType = 'string'; // Primary key bertipe string
 
-    // Relationship with the JenisBarang model
-    public function jenis_barang()
+    public function jenisBarang()
     {
-        return $this->belongsTo(JenisBarang::class, 'br_kategori', 'jns_brg_kode');
+        return $this->belongsTo(JenisBarang::class, 'jns_brg_kode', 'jns_brg_kode');
     }
+
 }
-
-
