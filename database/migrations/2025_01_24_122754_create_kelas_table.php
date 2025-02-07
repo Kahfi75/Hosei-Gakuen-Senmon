@@ -13,7 +13,7 @@ return new class extends Migration
     {
         // Membuat tabel 'kelas'
         Schema::create('kelas', function (Blueprint $table) {
-            $table->string('kelas_id', 10)->primary(); // Kolom ID kelas sebagai primary key
+            $table->id();
             $table->string('nama_kelas', 100); // Kolom untuk nama kelas
 
             $table->timestamps(); // Kolom created_at dan updated_at

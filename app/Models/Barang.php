@@ -1,7 +1,5 @@
 <?php
 
-// app/Models/Barang.php
-
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -11,15 +9,8 @@ class Barang extends Model
 {
     use HasFactory;
 
-    protected $table = 'barang';  // nama tabel
-    protected $primaryKey = 'id'; // primary key
+    protected $table = 'barang';  // Jika nama tabel tidak mengikuti konvensi Laravel
     protected $fillable = [
-        'kode_barang', 'nama_barang', 'kategori', 'jumlah', 'status'
+        'kode_barang', 'nama_barang', 'kategori', 'jumlah', 'status',
     ];
-
-    // Fungsi untuk mendapatkan status barang
-    public function getStatusAttribute($value)
-    {
-        return ucfirst($value); // mengubah status menjadi kapital pertama
-    }
 }

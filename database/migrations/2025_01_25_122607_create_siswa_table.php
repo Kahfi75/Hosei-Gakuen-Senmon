@@ -7,23 +7,26 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration
 {
     /**
-     * Jalankan migrasi.
+     * Run the migrations.
      */
     public function up(): void
     {
         Schema::create('siswa', function (Blueprint $table) {
-            $table->engine = 'InnoDB'; // Gunakan InnoDB untuk foreign key
+            $table->string('siswa_id', 20)->primary();  // Ganti id dengan siswa_id
+            $table->string('nisn', 15)->nullable();   
+            $table->string('nama_siswa', 100);        
+            $table->unsignedBigInteger('jurusan_id')->nullable();
+            $table->unsignedBigInteger('kelas_id')->nullable();
+            $table->string('no_siswa', 20)->nullable(); 
+            $table->timestamps();  
 
-            $table->string('siswa_id', 10)->primary(); // Primary key
-            $table->string('nama', 100); // Nama siswa
-            $table->string('kelas_id', 10); // Foreign key ke tabel kelas
-
-            $table->timestamps();
+            $table->foreign('jurusan_id')->references('id')->on('jurusan');
+            $table->foreign('kelas_id')->references('id')->on('kelas');
         });
     }
 
     /**
-     * Rollback migrasi.
+     * Reverse the migrations.
      */
     public function down(): void
     {

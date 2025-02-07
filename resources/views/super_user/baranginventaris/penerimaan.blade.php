@@ -3,75 +3,44 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Penerimaan Barang Inventaris</title>
+    <title>Penerimaan Barang</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
 </head>
 <body>
     <div class="container mt-4">
-        <h2>Penerimaan Barang Inventaris</h2>
+        <h2 class="mb-3">Penerimaan Barang</h2>
 
         @if(session('success'))
             <div class="alert alert-success">{{ session('success') }}</div>
         @endif
 
-        @if(session('error'))
-            <div class="alert alert-danger">{{ session('error') }}</div>
+        @if($errors->any())
+            <div class="alert alert-danger">
+                <ul>
+                    @foreach($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
         @endif
 
-        <!-- Form untuk menambah barang -->
         <form action="{{ route('super_user.baranginventaris.store') }}" method="POST">
             @csrf
             <div class="mb-3">
                 <label for="nama" class="form-label">Nama Barang</label>
-                <input type="text" name="nama" id="nama" class="form-control" required>
+                <input type="text" class="form-control" name="nama" required>
             </div>
-
             <div class="mb-3">
                 <label for="kategori" class="form-label">Jenis Barang</label>
-                <select name="kategori" id="kategori" class="form-control" required>
+                <select name="kategori" class="form-control" required>
                     <option value="">-- Pilih Jenis Barang --</option>
                     @foreach($jenisBarang as $jenis)
                         <option value="{{ $jenis->jns_brg_kode }}">{{ $jenis->jns_brg_nama }}</option>
                     @endforeach
                 </select>
             </div>
-
-            <button type="submit" class="btn btn-primary">Tambah Barang</button>
+            <button type="submit" class="btn btn-primary">Simpan</button>
         </form>
-
-        <hr>
-
-        <h3>Daftar Barang Inventaris</h3>
-        <table class="table table-bordered">
-            <thead>
-                <tr>
-                    <th>Kode Barang</th>
-                    <th>Nama Barang</th>
-                    <th>Jenis Barang</th>
-                    <th>Tanggal Terima</th>
-                    <th>Status</th>
-                    <th>Aksi</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach($penerimaan as $barang)
-                <tr>
-                    <td>{{ $barang->br_kode }}</td>
-                    <td>{{ $barang->br_nama }}</td>
-                    <td>{{ $barang->jenisBarang->jns_brg_nama ?? '-' }}</td>
-                    <td>{{ \Carbon\Carbon::parse($barang->br_tgl_terima)->format('d-m-Y') }}</td> <!-- Format tanggal -->
-                    <td>{{ $barang->br_status }}</td>
-                    <td>
-                        <form action="{{ route('super_user.baranginventaris.destroy', $barang->br_kode) }}" method="POST">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Apakah Anda yakin ingin menghapus barang ini?')">Hapus</button>
-                        </form>
-                    </td>
-                </tr>
-                @endforeach
-            </tbody>
-        </table>
     </div>
 </body>
 </html>

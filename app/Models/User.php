@@ -1,44 +1,45 @@
 <?php
 
-namespace App\Models;
+namespace App\Http\Controllers;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use App\Models\User;
 
-class User extends Authenticatable
+class AuthController extends Controller
 {
-    use HasFactory;
-
-    protected $table = 'tm_user'; 
-    protected $primaryKey = 'user_id';
-
-    protected $fillable = [
-        'user_nama',
-        'user_pass',
-        'user_hak',
-        'user_sts',
-    ];
-
-    public $timestamps = false;
-
-    public function getAuthPassword()
+    public function showLoginForm()
     {
-        return $this->user_pass;
-    }
-    public function barangInventaris()
-    {
-        return $this->hasMany(BarangInventaris::class, 'user_id', 'user_id');
+        return view('auth.login');
     }
 
-    public function peminjaman()
+    public function login(Request $request)
     {
-        return $this->hasMany(Peminjaman::class, 'user_id', 'user_id');
+        $request->validate([
+            'user_nama' => 'required',
+            'user_pass' => 'required',
+        ]);
+
+        // Ambil user berdasarkan username
+        $user = User::where('user_nama', $request->user_nama)->first();
+
+        if ($user && Hash::check($request->user_pass, $user->user_pass)) {
+            session([
+                'user_id' => $user->user_id,
+                'user_nama' => $user->user_nama,
+                'user_hak' => $user->user_hak,
+            ]);
+
+            return redirect()->route('dashboard');
+        }
+
+        return back()->withErrors(['user_nama' => 'Username atau password salah']);
     }
 
-    public function pengembalian()
+    public function logout()
     {
-        return $this->hasMany(Pengembalian::class, 'user_id', 'user_id');
+        session()->flush();
+        return redirect()->route('login');
     }
-    
 }

@@ -17,6 +17,6 @@ class Keahlian extends Model
 
     public function siswa()
     {
-        return $this->hasMany(Siswa::class, 'kelas_id', 'id');
+        return $this->hasMany(Siswa::class, 'Keahlian_id', 'id');
     }
 }

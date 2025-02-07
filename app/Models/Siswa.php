@@ -25,11 +25,11 @@ class Siswa extends Model
 
     public function jurusan()
     {
-    return $this->belongsTo(Keahlian::class, 'Keahlian_id', 'id');
+        return $this->belongsTo(Keahlian::class, 'Keahlian_id', 'id');
     }
 
     public function kelas()
     {
-        return $this->belongsTo(kelas::class, 'kelas_id', 'id');
+        return $this->belongsTo(Kelas::class, 'kelas_id', 'id');
     }
 }

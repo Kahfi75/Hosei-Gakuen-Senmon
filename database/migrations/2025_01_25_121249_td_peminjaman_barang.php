@@ -19,7 +19,8 @@ return new class extends Migration
                 $table->char('pdb_sts', 2)->nullable();
                 $table->timestamps();
     
-            
+                $table->foreign('pb_id')->references('pb_id')->on('tm_peminjaman');
+                $table->foreign('br_kode')->references('br_kode')->on('tm_barang_inventaris');
             });
     }
 
